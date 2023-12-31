@@ -12,8 +12,11 @@ const app = express();
 
 /* Middleware*/
 //Here we are configuring express to use body-parser as middle-ware.
-express.json();
-express.urlencoded({ extended: false });
+app.use(express.urlencoded({ extended: false }))
+app.use(express.json())
+
+// Require cors
+const cors = require("cors")
 
 // Cors for cross origin allowance
 app.use(cors());
@@ -26,3 +29,27 @@ app.listen(PORT, () => {
   console.log("The server is now running on port:", PORT);
 })
 
+app.get("/all", (req, res) => {
+  console.log("• GET request '/all'");
+  console.log("Response:", projectData);
+
+  res.setHeader("Content-Type", "application/json")
+  .status(200)
+  .send(JSON.stringify(projectData))
+});
+
+app.post("/add", (req, res) => {
+  console.log("• POST request '/add'");
+  console.log("Body:", req.body);
+
+  projectData = {
+    date: req.body.date,
+    temperature: req.body.temperature,
+    content: req.body.content
+  }
+  res.setHeader("Content-Type", "application/json")
+  .status(200)
+  .send(JSON.stringify({
+    message: "Data has been posted"
+  }))
+})
